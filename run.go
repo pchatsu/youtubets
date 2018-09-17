@@ -68,6 +68,10 @@ func (c *Cmd) displayTransScript(ts *Transcript) error {
 
 	for _, s := range text.Lines {
 		s := html.UnescapeString(s)
+		if len(s) == 0 {
+			continue
+		}
+
 		switch s[len(s)-1:] {
 		case ".":
 			fmt.Fprintln(c.Stdout, s)

@@ -54,7 +54,7 @@ func (v *Video) TranscriptList() ([]Transcript, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("response %d in requesting transcript", res.StatusCode)
+		return nil, fmt.Errorf("responded %d in requesting transcript", res.StatusCode)
 	}
 
 	ts, err := NewTranscriptList(v.ID, res.Body)
@@ -108,7 +108,7 @@ func (t *Transcript) Text() (*Text, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("response %d in requesting transcript", res.StatusCode)
+		return nil, fmt.Errorf("responded %d in requesting transcript", res.StatusCode)
 	}
 
 	return NewText(res.Body)

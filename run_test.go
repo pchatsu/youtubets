@@ -18,6 +18,10 @@ func TestCmd_Run(t *testing.T) {
 				w.Header().Set("content-Type", "text/xml")
 				fmt.Fprintf(w, transcriptXML)
 				return
+			case "/timedtext?lang=en&name=test_en&v=test0003":
+				w.Header().Set("content-Type", "text/xml")
+				fmt.Fprintf(w, includingEmptyLineTranscriptXML)
+				return
 			case "/timedtext?type=list&v=test0001":
 				w.Header().Set("content-Type", "text/xml")
 				fmt.Fprintf(w, listXML)
@@ -55,6 +59,7 @@ func TestCmd_Run(t *testing.T) {
 		{"#7 error case too many args", args{[]string{"test0001", "test0002"}, &youtubets.Option{List: true}}, "args must have one video id\n", true},
 		{"#8 error case no transcript", args{[]string{"test0002"}, &youtubets.Option{}}, "has no transcript\n", true},
 		{"#9 error case no transcript", args{[]string{"test0001"}, &youtubets.Option{Lang: "ja", Name: "foo"}}, "has empty transcript XML\n", true},
+		{"#10 normal case get default lang", args{[]string{"test0003"}, &youtubets.Option{Lang: "en", Name: "test_en"}}, "hello world.\n", false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
