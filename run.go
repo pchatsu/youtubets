@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html"
 	"io"
-	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -68,10 +67,15 @@ func (c *Cmd) displayTransScript(ts *Transcript) error {
 	}
 
 	for _, s := range text.Lines {
-		if strings.HasSuffix(s, ".") {
-			fmt.Fprintln(c.Stdout, html.UnescapeString(s))
-		} else {
-			fmt.Fprint(c.Stdout, html.UnescapeString(s))
+		s := html.UnescapeString(s)
+		switch s[len(s)-1:] {
+		case ".":
+			fmt.Fprintln(c.Stdout, s)
+		case " ":
+			fmt.Fprint(c.Stdout, s)
+		default:
+
+			fmt.Fprint(c.Stdout, s+" ")
 		}
 	}
 
@@ -89,7 +93,7 @@ func (c *Cmd) displayDefaultTranscript(videoID string) error {
 	if len(transcriptList) <= 0 {
 		err := errors.New("has no transcript")
 		fmt.Fprintln(c.Stderr, err.Error())
-		return nil
+		return err
 	}
 
 	for _, ts := range transcriptList {

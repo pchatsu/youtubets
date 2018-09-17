@@ -1,2 +1,2 @@
 # youtubets
-Download youtube transscript
+Download youtube transcript

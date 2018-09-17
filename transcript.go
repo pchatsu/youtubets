@@ -11,8 +11,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	URL = "http://video.google.com/timedtext"
+var (
+	Domain = "http://video.google.com"
 )
 
 type Video struct {
@@ -35,7 +35,7 @@ type Text struct {
 }
 
 func (v *Video) TranscriptList() ([]Transcript, error) {
-	req, err := http.NewRequest("GET", URL, nil)
+	req, err := http.NewRequest("GET", Domain+"/timedtext", nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "")
 	}
@@ -72,6 +72,10 @@ func NewTranscriptList(videoID string, xmlReader io.Reader) (*TranscriptList, er
 		return nil, errors.Wrap(err, "read transcript list XML error")
 	}
 
+	if buf.Len() <= 0 {
+		return nil, errors.New("has empty transcript list XML")
+	}
+
 	if err := xml.Unmarshal(buf.Bytes(), &tl); err != nil {
 		return nil, errors.Wrap(err, "invalid XML")
 	}
@@ -84,7 +88,7 @@ func NewTranscriptList(videoID string, xmlReader io.Reader) (*TranscriptList, er
 }
 
 func (t *Transcript) Text() (*Text, error) {
-	req, err := http.NewRequest("GET", URL, nil)
+	req, err := http.NewRequest("GET", Domain+"/timedtext", nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "")
 	}
