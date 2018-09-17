@@ -1,31 +1,31 @@
 package main
 
 import (
-	"io/ioutil"
-	"fmt"
-	"encoding/xml"
+	"flag"
+	"os"
+
+	"github.com/pchatsu/youtubets"
 )
 
-package main
-
-import (
-"encoding/xml"
-"fmt"
-"io/ioutil"
+var (
+	lang = flag.String("lang", "en", "target language")
+	name = flag.String("name", "", "target track name")
+	list = flag.Bool("l", false, "display enable transcripts")
 )
 
 func main() {
-	bytes, err := ioutil.ReadFile("/Users/sunagawa/text.xml")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+	flag.Parse()
+	if err := Run(); err != nil {
+		os.Exit(1)
 	}
-	data := new(Transcript)
-	if err := xml.Unmarshal(bytes, data); err != nil {
-		fmt.Println("XML Unmarshal error:", err)
-		return
+	os.Exit(0)
+}
+
+func Run() error {
+	cmd := youtubets.Cmd{Stdin: os.Stdin, Stdout: os.Stdout, Stderr: os.Stdout}
+	opt := youtubets.Option{Lang: *lang, Name: *name, List: *list}
+	if err := cmd.Run(flag.Args(), &opt); err != nil {
+		return err
 	}
-	for _, text := range data.Text {
-		fmt.Println(text + "  ")
-	}
+	return nil
 }
