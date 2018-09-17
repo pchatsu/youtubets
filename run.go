@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -67,18 +68,18 @@ func (c *Cmd) displayTransScript(ts *Transcript) error {
 	}
 
 	for _, s := range text.Lines {
-		s := html.UnescapeString(s)
+		s = html.UnescapeString(s)
+		s = strings.Replace(s, "\n", " ", -1)
 		if len(s) == 0 {
 			continue
 		}
 
 		switch s[len(s)-1:] {
-		case ".":
+		case ".", "?", "!":
 			fmt.Fprintln(c.Stdout, s)
 		case " ":
 			fmt.Fprint(c.Stdout, s)
 		default:
-
 			fmt.Fprint(c.Stdout, s+" ")
 		}
 	}

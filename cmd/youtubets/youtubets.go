@@ -13,7 +13,7 @@ var (
 )
 
 var (
-	lang = flag.String("lang", "en", "target language")
+	lang = flag.String("lang", "", "target language")
 	name = flag.String("name", "", "target track name")
 	list = flag.Bool("l", false, "display enable transcripts")
 )
